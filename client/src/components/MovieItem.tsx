@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import getMovieList from "../services/GetMovieList";
 import addFavourite from "../services/AddFavourite";
 import removeFavourite from "../services/removeFavourite";
+import ShowMovieDetails from "./ShowMovieDetails";
 
 type Props = {
     moviedetails : movieDetails,
@@ -16,6 +17,7 @@ type Props = {
 const MovieItem = ({moviedetails, movieListType, deleteCallback} : Props) => {
     const [showFound, setShowFound] = useState<boolean>(false);
     const [showMovieAdded, setShowMovieAdded] = useState<boolean>(false);
+    const [showMovieDetails, setShowMovieDetails] = useState<boolean>(false);
     const [error, setError] = useState<Error | null>(null);  
     const [isFav, setIsFav] = useState<boolean>(false);
     
@@ -69,8 +71,26 @@ const MovieItem = ({moviedetails, movieListType, deleteCallback} : Props) => {
         }
     };
 
+    const showMovieDetailsFunc = () => setShowMovieDetails(true);
+
     return (
         <>
+            {
+                <>
+                    <Modal size="lg" centered show={showMovieDetails} onHide={() => setShowMovieDetails(false)}>
+                        <Modal.Header closeButton>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <ShowMovieDetails movieDetails={moviedetails} />
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="primary" onClick={() => setShowMovieDetails(false)}>
+                                Close
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
+                </>
+            }
             {
                 <>
                 <Modal show={error===null ? false : true} onHide={() => setError(null)}>
@@ -108,9 +128,9 @@ const MovieItem = ({moviedetails, movieListType, deleteCallback} : Props) => {
                 </>
             }
             <Card className="my-3" style={{ width: '14rem', height: '22rem'}}>
-                <Card.Img variant="top" src={`${process.env.REACT_APP_BASE_URL}/images/${moviedetails.poster}`} style={{minHeight: '16rem', maxHeight: '16rem'}}/>
+                <Card.Img onClick={showMovieDetailsFunc} variant="top" src={`${process.env.REACT_APP_BASE_URL}/images/${moviedetails.poster}`} style={{minHeight: '16rem', maxHeight: '16rem'}}/>
                 <Card.Body>
-                    <Card.Title style={{fontSize: '1rem', overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{moviedetails.title}</Card.Title>
+                    <Card.Title onClick={showMovieDetailsFunc} style={{fontSize: '1rem', overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{moviedetails.title}</Card.Title>
                     <div className="text-center my-4" style={{fontSize: '0.8rem'}}>
                         {
                             !isFav &&
