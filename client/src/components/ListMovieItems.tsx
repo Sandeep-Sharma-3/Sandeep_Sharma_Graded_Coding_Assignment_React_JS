@@ -51,11 +51,12 @@ class ListMovieItems extends Component<RouteComponentProps<{movieListType:string
                         
                         <h3 className="my-3">Movies</h3>
                         <hr/>
-                        <Row xs={2} md={3} lg={5}>
+                        <Row xs={1} sm={2} md={3} lg={4} xl={5}>
                             {
+                                (this.state.movies?.length !== 0) &&
                                 this.state.movies?.filter(post => {
                                     if (this.props.searchQuery === '' || this.props.searchQuery === undefined) {
-                                      return post;
+                                    return post;
                                     } else {
                                         const query = this.props.searchQuery as string;
                                         if (post.title.toLowerCase().includes(query.toLowerCase())) {
@@ -69,6 +70,10 @@ class ListMovieItems extends Component<RouteComponentProps<{movieListType:string
                                         </Col>
                                     )
                                 )
+                            }
+                            {
+                                (this.state.movies?.length === 0) && 
+                                <div>No data found</div>
                             }
                         </Row>
                     </>
